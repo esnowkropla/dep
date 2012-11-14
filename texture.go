@@ -3,10 +3,15 @@ package main
 import (
 	"errors"
 	"image"
+_	"image/png"
+_	"image/jpeg"
+_ "image/gif"
 	"image/color"
 	"github.com/banthar/gl"
+	"os"
 )
 
+/*
 var (
 	CustomColorModels = make(map[color.Model]*GLColorModel)
 )
@@ -23,8 +28,43 @@ type GLColorModel struct {
 	Target gl.GLenum
 	PixelBytesSize int
 	Model EngineColorModel
+}*/
+
+func texture(s string) gl.Texture {
+	f, err := os.Open(s)
+	if err != nil {die(err)}
+	defer f.Close()
+
+	img, _, err := image.Decode(f)
+	if err != nil {die(err)	}
+
+	w := img.Bounds().Dx()
+	h := img.Bounds().Dy()
+
+	gl.Enable(gl.TEXTURE_2D)
+	tex := gl.GenTexture()
+	tex.Bind(gl.TEXTURE_2D)
+	//gl.PixelStorei(gl.UNPACK_ALIGNMENT, 1)
+
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+
+	//gl.TexEnvf(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
+
+	internal_format, img_type, format, target, err := ColorModelToGLTypes(img.ColorModel())
+	if err != nil {die(err)}
+
+	data, err := ImageData(img)
+	if err != nil {die(err)}
+
+	gl.TexImage2D(target, 0, internal_format, w, h, 0, img_type, format, data)
+	tex.Unbind(gl.TEXTURE_2D)
+	return tex
 }
 
+/* Begin Stolen Code */
 func ColorModelToGLTypes(model color.Model) (internalFormat int, typ gl.GLenum, format gl.GLenum, target gl.GLenum, err error) {
 
   switch model.(type) {
@@ -47,12 +87,12 @@ func ColorModelToGLTypes(model color.Model) (internalFormat int, typ gl.GLenum, 
     return gl.LUMINANCE16, gl.LUMINANCE, gl.UNSIGNED_SHORT, gl.TEXTURE_2D, nil
   case color.YCbCrModel:
     return gl.RGB8, gl.RGB, gl.UNSIGNED_BYTE, gl.TEXTURE_2D, nil
-  default:
+  /*default:
     m, e := CustomColorModels[model]
     if e {
       return m.InternalFormat, m.Type, m.Format, m.Target, nil
     }
-    break
+    break*/
   }
   return 0, 0, 0, 0, errors.New("unsupported format")
 }
@@ -117,12 +157,13 @@ func ImageData(image image.Image) (data interface{}, err error) {
 			}
 		}
 		return data, nil
-	default:
+	/*default:
 		m, e := CustomColorModels[model]
 		if e {
 			return m.Model.Data(), nil
-		}
+		}*/
 	}
 	return nil, errors.New("unsupported format")
 }
+/* End stolen code */
 
