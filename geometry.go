@@ -36,6 +36,10 @@ func (u vector) sub(v vector) vector {
 	return vector{x:u.x-v.x, y:u.y-v.y, z:u.z-v.z}
 }
 
+func (v vector) scale(a float64) vector {
+	return vector{v.x*a, v.y*a, v.z*a}
+}
+
 func make_vector(a, b, c float64) vector {
 	return vector{x:a, y:b, z:c}
 }

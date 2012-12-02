@@ -27,7 +27,7 @@ func general_render(s *sprite_list, c *camera) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.PushMatrix()
 	//gl.Translatef(float32(c.x), float32(c.y), float32(c.z))
-	glu.LookAt(c.x, c.y, c.z, c.front.x, c.front.y, c.front.z, c.top.x, c.top.y, c.top.z)
+	glu.LookAt(c.pos.x, c.pos.y, c.pos.z, c.front.x, c.front.y, c.front.z, c.top.x, c.top.y, c.top.z)
 
 	for e := s.Front(); e != nil; e = e.Next() {
 		gl.PushMatrix()

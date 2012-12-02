@@ -5,7 +5,7 @@ import (
 	"github.com/banthar/gl"
 	//"github.com/banthar/glu"
 	"github.com/jteeuwen/glfw"
-	//"time"
+	"time"
 	"fmt"
 	//"image"
 //_	"image/gif"
@@ -19,6 +19,7 @@ import (
 	//"flag"
 	//"runtime/pprof"
 	//"log"
+	"container/list"
 )
 
 var my_camera = new(camera)
@@ -26,6 +27,12 @@ var my_camera = new(camera)
 func die (e error) {
 	fmt.Println(e)
 	os.Exit(1)
+}
+
+func update(l *list.List, dt float64) {
+	for e := l.Front(); e != nil; e = e.Next() {
+		e.Value.(*camera).time_step(dt)
+	}
 }
 
 func main() {
@@ -68,20 +75,32 @@ func main() {
 	my_camera.top = vector{x:0.0, y:0.0, z:1.0}
 	//End testing sprites
 
+	physics_objects := new(list.List)
+	physics_objects.PushBack(my_camera)
+
+	dt, err := time.ParseDuration("16.7ms")
+	if err != nil {
+		die(err)
+	}
+
 	running := true
 	for running {
-		//update()
-		t += 0.001
+		t0 := time.Now()
+		update(physics_objects, float64(dt.Nanoseconds())/1000000)
+		t += 0.025
 		new_guy.x = math.Cos(t)
 		new_guy.y = math.Sin(t) + 3.0
-		//new_guy.z = math.Sin(t)
-		//my_camera.move(vector{x:new_guy.x, y:0.0, z:0.0})
-		//my_camera.x = new_guy.x
-		//my_camera.point_at(vector{x:new_guy.x, y:new_guy.y, z:new_guy.z})
 
 		general_render(renderees, my_camera)
 
 		glfw.SwapBuffers()
+
+		dt = time.Since(t0)
+		rate := time.Microsecond * 16670
+		if dt < rate {
+			time.Sleep((rate - dt))
+			//fmt.Println("This frame took", float64(dt.Nanoseconds())/1000000, "ms to render.")
+		}
 		running = glfw.Key(glfw.KeyEsc) == 0 && glfw.WindowParam(glfw.Opened) != 0
 	}
 }
