@@ -1,13 +1,16 @@
 package main
 
 import (
+	"container/list"
 	"github.com/banthar/gl"
 	"github.com/banthar/glu"
-	"container/list"
+	. "vector"
 )
 
-type sprite_list struct {
-	list.List
+type sprite struct {
+  Vector
+  height, width float32
+  tex gl.Texture
 }
 
 func size_window(x, y int, fov, aspect, min_cull, max_cull float64) {
@@ -22,12 +25,11 @@ func resize_window(x, y int) {
 	size_window(x, y, 45.0, float64(x)/float64(y), 1.0, 1000.0)
 }
 
-func general_render(s *sprite_list, c *camera) {
-
+func general_render(s *list.List, c *camera) {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.PushMatrix()
-	//gl.Translatef(float32(c.x), float32(c.y), float32(c.z))
-	glu.LookAt(c.pos.x, c.pos.y, c.pos.z, c.front.x, c.front.y, c.front.z, c.top.x, c.top.y, c.top.z)
+	//gl.Translatef(float32(c.X), float32(c.Y), float32(c.Z))
+	glu.LookAt(c.pos.X, c.pos.Y, c.pos.Z, c.front.X, c.front.Y, c.front.Z, c.top.X, c.top.Y, c.top.Z)
 
 	for e := s.Front(); e != nil; e = e.Next() {
 		gl.PushMatrix()
@@ -38,17 +40,20 @@ func general_render(s *sprite_list, c *camera) {
 	gl.PopMatrix()
 }
 
-func (s sprite) render () {
-	gl.Translatef(float32(s.x), float32(s.y), float32(s.z))
+func (s sprite) render() {
+	gl.Translatef(float32(s.X), float32(s.Y), float32(s.Z))
 	gl.Rotatef(90.0, 1.0, 0.0, 0.0)
 
 	s.tex.Bind(gl.TEXTURE_2D)
 	gl.Begin(gl.QUADS)
-		gl.TexCoord2f(0.0, 1.0); gl.Vertex3f(-s.width/2.0, -s.height/2.0, 0.0)
-		gl.TexCoord2f(1.0, 1.0); gl.Vertex3f(s.width/2.0, -s.height/2.0, 0.0)
-		gl.TexCoord2f(1.0, 0.0); gl.Vertex3f(s.width/2.0, s.height/2.0, 0.0)
-		gl.TexCoord2f(0.0, 0.0); gl.Vertex3f(-s.width/2.0, s.height/2.0, 0.0)
+	gl.TexCoord2f(0.0, 1.0)
+	gl.Vertex3f(-s.width/2.0, -s.height/2.0, 0.0)
+	gl.TexCoord2f(1.0, 1.0)
+	gl.Vertex3f(s.width/2.0, -s.height/2.0, 0.0)
+	gl.TexCoord2f(1.0, 0.0)
+	gl.Vertex3f(s.width/2.0, s.height/2.0, 0.0)
+	gl.TexCoord2f(0.0, 0.0)
+	gl.Vertex3f(-s.width/2.0, s.height/2.0, 0.0)
 	gl.End()
 	s.tex.Unbind(gl.TEXTURE_2D)
 }
-

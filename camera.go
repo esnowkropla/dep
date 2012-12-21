@@ -1,46 +1,49 @@
 package main
 
+import (
+.  "vector"
+)
+
 type camera struct {
-	body
-	top, front vector
+	*body
+	top, front Vector
 }
 
-func (c *camera) init(v vector) {
-	c.pos.x = v.x
-	c.pos.y = v.y
-	c.pos.z = v.z
+func (c *camera) init(v Vector) {
+  c.body = new(body)
+  c.pos = v
 
-	c.top.x = c.pos.x
-	c.top.y = c.pos.y
-	c.top.z = c.pos.z + 1.0
+	c.top.X = c.pos.X
+	c.top.Y = c.pos.Y
+	c.top.Z = c.pos.Z + 1.0
 
-	c.front.x = c.pos.x + 1.0
-	c.front.y = c.pos.y
-	c.front.z = c.pos.z
+	c.front.X = c.pos.X + 1.0
+	c.front.Y = c.pos.Y
+	c.front.Z = c.pos.Z
 
 	c.mass = 1
 	//c.speed = 1
 }
 
-func (c *camera) move(v vector) {
-	c.pos.x = v.x
-	c.pos.y = v.y
-	c.pos.z = v.z
+func (c *camera) move(v Vector) {
+	c.pos.X = v.X
+	c.pos.Y = v.Y
+	c.pos.Z = v.Z
 
 	/*
-	c.top.x = v.x
-	c.top.y = v.y
-	c.top.z = v.z  + 1.0
+		c.top.X = v.X
+		c.top.Y = v.Y
+		c.top.Z = v.Z  + 1.0
 	*/
-	//c.front.x = v.x
-	//c.front.y = v.y + 1.0
-	//c.front.z = v.z
+	//c.front.X = v.X
+	//c.front.Y = v.Y + 1.0
+	//c.front.Z = v.Z
 }
 
 //As in point the camera at something.
-//I'm assuming the camera is at some negative y, pointing toward positive y with positive x on the right and positive z up.
-func (c *camera) point_at(v vector) {
-	c.front.x = vector{x:v.x - c.pos.x, y:v.y-c.pos.y, z:v.z-c.pos.z}.normalize().x// + c.x//Relative vector
-	c.front.y = vector{x:v.x - c.pos.x, y:v.y-c.pos.y, z:v.z-c.pos.z}.normalize().y// + c.y
-	c.front.z = vector{x:v.x - c.pos.x, y:v.y-c.pos.y, z:v.z-c.pos.z}.normalize().z// + c.z
+//I'm assuming the camera is at some negative Y, pointing toward positive Y with positive X on the right and positive Z up.
+func (c *camera) point_at(v Vector) {
+	c.front.X = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().X // + c.X//Relative vector
+	c.front.Y = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().Y // + c.Y
+	c.front.Z = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().Z // + c.Z
 }
