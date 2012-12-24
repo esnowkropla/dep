@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/jteeuwen/glfw"
-	."vector"
+	. "vector"
 )
 
 func print_top() {
@@ -15,38 +15,38 @@ func up_arrow(press int) {
 	fmt.Println("Key Up", press)
 	fmt.Println(my_camera.pos)
 	if press == 1 {
-		my_camera.forces = my_camera.forces.Add(Vector{0, 0, 1})
-		fmt.Println(my_camera.forces)
+		my_camera.input = my_camera.input.Add(Vector{0, 0, 1})
+		fmt.Println(my_camera.input)
 	} else {
-		my_camera.forces = my_camera.forces.Add(Vector{0, 0, -1})
-		fmt.Println(my_camera.forces)
+		my_camera.input = my_camera.input.Add(Vector{0, 0, -1})
+		fmt.Println(my_camera.input)
 	}
 }
 
 func down_arrow(press int) {
 	fmt.Println("Key Down", press)
 	if press == 1 {
-		my_camera.forces = my_camera.forces.Add(Vector{0, 0, -1})
+		my_camera.input = my_camera.input.Add(Vector{0, 0, -1})
 	} else {
-		my_camera.forces = my_camera.forces.Add(Vector{0, 0, 1})
+		my_camera.input = my_camera.input.Add(Vector{0, 0, 1})
 	}
 }
 
 func left_arrow(press int) {
 	fmt.Println("Key Left", press)
 	if press == 1 {
-		my_camera.forces = my_camera.forces.Add(Vector{-1, 0, 0})
+		my_camera.input = my_camera.input.Add(Vector{-1, 0, 0})
 	} else {
-		my_camera.forces = my_camera.forces.Add(Vector{1, 0, 0})
+		my_camera.input = my_camera.input.Add(Vector{1, 0, 0})
 	}
 }
 
 func right_arrow(press int) {
 	fmt.Println("Key Right", press)
 	if press == 1 {
-		my_camera.forces = my_camera.forces.Add(Vector{1, 0, 0})
+		my_camera.input = my_camera.input.Add(Vector{1, 0, 0})
 	} else {
-		my_camera.forces = my_camera.forces.Add(Vector{-1, 0, 0})
+		my_camera.input = my_camera.input.Add(Vector{-1, 0, 0})
 	}
 }
 

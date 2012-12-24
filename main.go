@@ -33,8 +33,8 @@ func die(e error) {
 func update(l *list.List, dt float64) {
 	for e := l.Front(); e != nil; e = e.Next() {
 		switch e.Value.(type) {
-		case *camera://Could implement this with an interface implementing e.g. IsBody
-			time_step(*e.Value.(*camera), 0, dt)
+		case *camera: //Could implement this with an interface implementing e.g. IsBody
+			e.Value.(*camera).update(dt)
 		case *body:
 			time_step(*e.Value.(*phobject), 0, dt)
 		}
@@ -98,8 +98,9 @@ func main() {
 		new_guy.X = math.Cos(t)
 		new_guy.Y = math.Sin(t) + 3.0
 
-		general_render(renderees, my_camera)
+		//my_camera.point_at(Vector{new_guy.X, new_guy.Y, new_guy.Z})
 
+		general_render(renderees, my_camera)
 		glfw.SwapBuffers()
 
 		dt = time.Since(t0)

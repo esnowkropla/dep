@@ -6,7 +6,7 @@ import (
 )
 
 type body struct {
-	pos, vel, forces Vector
+	pos, vel, forces, input Vector
 	mass             float64
 }
 

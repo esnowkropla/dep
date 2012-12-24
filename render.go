@@ -8,9 +8,9 @@ import (
 )
 
 type sprite struct {
-  Vector
-  height, width float32
-  tex gl.Texture
+	Vector
+	height, width float32
+	tex           gl.Texture
 }
 
 func size_window(x, y int, fov, aspect, min_cull, max_cull float64) {
