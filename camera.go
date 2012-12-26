@@ -43,9 +43,7 @@ func (c *camera) move(v Vector) {
 //As in point the camera at something.
 //I'm assuming the camera is at some negative Y, pointing toward positive Y with positive X on the right and positive Z up.
 func (c *camera) point_at(v Vector) {
-	c.front.X = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().X + c.pos.X
-	c.front.Y = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().Y + c.pos.Y
-	c.front.Z = Vector{X: v.X - c.pos.X, Y: v.Y - c.pos.Y, Z: v.Z - c.pos.Z}.Normalize().Z + c.pos.Z
+  c.front = v.Sub(c.pos).Normalize().Add(c.pos)
 }
 
 func (c *camera) update(dt float64) {
